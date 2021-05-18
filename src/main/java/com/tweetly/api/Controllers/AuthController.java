@@ -27,7 +27,7 @@ public class AuthController {
         return client;
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public Client test(@RequestParam("email") String email, @RequestParam("password") String password) {
         return repository.findUser(email, password);
     }
