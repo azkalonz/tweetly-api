@@ -4,6 +4,15 @@ public class Comment {
     private int id;
     private String message;
     private Client author;
+    private String date;
+
+    public String getDate() {
+        return this.date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public int getId() {
         return this.id;
