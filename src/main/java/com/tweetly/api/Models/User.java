@@ -6,6 +6,15 @@ public class User {
     private String password;
     private String email;
     private Role role;
+    private Boolean banned;
+
+    public Boolean getBanned() {
+        return this.banned;
+    }
+
+    public void setBanned(Boolean banned) {
+        this.banned = banned;
+    }
 
     public String getFirstName() {
         return this.firstName;

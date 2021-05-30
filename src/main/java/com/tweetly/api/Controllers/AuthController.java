@@ -1,5 +1,6 @@
 package com.tweetly.api.Controllers;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.tweetly.api.Models.Client;
@@ -54,5 +55,34 @@ public class AuthController {
         user.setPassword(client.getPassword());
 
         return repository.save(user);
+    }
+
+    @GetMapping("/users")
+    public List<Client> users() {
+        return repository.findAll();
+    }
+
+    @PostMapping("/ban/{client_id}")
+    public Client banUser(@PathVariable("client_id") String id) {
+        Optional<Client> client = repository.findById(id);
+        if (client.isPresent()) {
+            Client theClient = client.get();
+            theClient.setBanned(true);
+            return repository.save(theClient);
+        } else {
+            return null;
+        }
+    }
+
+    @PostMapping("/unban/{client_id}")
+    public Client unbanUser(@PathVariable("client_id") String id) {
+        Optional<Client> client = repository.findById(id);
+        if (client.isPresent()) {
+            Client theClient = client.get();
+            theClient.setBanned(false);
+            return repository.save(theClient);
+        } else {
+            return null;
+        }
     }
 }
