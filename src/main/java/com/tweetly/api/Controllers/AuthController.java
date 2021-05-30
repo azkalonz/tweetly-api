@@ -44,4 +44,15 @@ public class AuthController {
             return null;
         }
     }
+
+    @PostMapping("/update-user")
+    public Client updateUser(@RequestBody Client client) {
+        Client user = getUser(client.getId());
+        user.setFirstName(client.getFirstName());
+        user.setLastName(client.getLastName());
+        user.setEmail(client.getEmail());
+        user.setPassword(client.getPassword());
+
+        return repository.save(user);
+    }
 }
