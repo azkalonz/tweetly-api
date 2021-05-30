@@ -8,8 +8,10 @@ import java.util.Optional;
 import com.tweetly.api.Models.Client;
 import com.tweetly.api.Models.Comment;
 import com.tweetly.api.Models.Post;
+import com.tweetly.api.Models.Report;
 import com.tweetly.api.Repositories.ClientsRepository;
 import com.tweetly.api.Repositories.PostsRepository;
+import com.tweetly.api.Repositories.ReportsRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,10 +29,12 @@ public class PostController {
     @Autowired
     private PostsRepository postsRepo;
     private ClientsRepository clientsRepo;
+    private ReportsRepository reportsRepo;
 
-    PostController(PostsRepository a, ClientsRepository b) {
+    PostController(PostsRepository a, ClientsRepository b, ReportsRepository c) {
         postsRepo = a;
         clientsRepo = b;
+        reportsRepo = c;
     }
 
     @PostMapping("/add-comment")
@@ -78,7 +82,7 @@ public class PostController {
         }
         Post post = new Post();
         post.setMessage(message);
-        post.setAuthor(client.get());
+        post.setAuthor(client.get().withoutFollowers());
         post.setDate(date);
         postsRepo.insert(post);
         return post;
@@ -153,6 +157,43 @@ public class PostController {
             return theClient;
         } else {
             return null;
+        }
+    }
+
+    @PostMapping("/report-post/{post_id}/{client_id}")
+    public String reportPost(@PathVariable("post_id") String postId, @PathVariable("client_id") String clientId) {
+        Optional<Client> client = clientsRepo.findById(clientId);
+        Optional<Post> post = postsRepo.findById(postId);
+
+        if (client.isPresent() && post.isPresent()) {
+            Client theClient = client.get();
+            Post thePost = post.get();
+            String date = java.time.LocalDateTime.now().toString();
+            Report report = new Report();
+
+            report.setReporter(theClient.withoutFollowers());
+            report.setPost(thePost);
+            report.setDate(date);
+
+            reportsRepo.save(report);
+            return "Success";
+        } else {
+            return "Client / Post not found";
+        }
+    }
+
+    @GetMapping("/reports")
+    public List<Report> reports() {
+        return reportsRepo.findAll();
+    }
+
+    @PostMapping("/delete-report/{report_id}")
+    public String deleteReport(@PathVariable("report_id") String id) {
+        try {
+            reportsRepo.deleteById(id);
+            return "Success";
+        } catch (Exception e) {
+            return "Error";
         }
     }
 }
