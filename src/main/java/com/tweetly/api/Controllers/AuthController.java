@@ -53,7 +53,7 @@ public class AuthController {
         user.setLastName(client.getLastName());
         user.setEmail(client.getEmail());
         user.setPassword(client.getPassword());
-
+        user.setImage(client.getImage());
         return repository.save(user);
     }
 

@@ -7,6 +7,15 @@ public class User {
     private String email;
     private Role role;
     private Boolean banned;
+    private String image;
+
+    public String getImage() {
+        return this.image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public Boolean getBanned() {
         return this.banned;

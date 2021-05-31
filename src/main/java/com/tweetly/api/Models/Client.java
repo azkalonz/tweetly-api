@@ -27,6 +27,8 @@ public class Client extends User {
         c.setFirstName(this.getFirstName());
         c.setLastName(this.getLastName());
         c.setEmail(this.getEmail());
+        c.setBanned(this.getBanned());
+        c.setImage(this.getImage());
         return c;
     }
 
